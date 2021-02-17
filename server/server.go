@@ -11,7 +11,7 @@ import (
 	"github.com/canonical/go-dqlite"
 	"github.com/canonical/go-dqlite/app"
 	"github.com/canonical/go-dqlite/client"
-	"github.com/freeekanayaka/kvsql/server/config"
+	"github.com/canonical/kvsql-dqlite/server/config"
 	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
 	"github.com/rancher/kine/pkg/endpoint"

@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/freeekanayaka/kvsql/server"
-	"github.com/freeekanayaka/kvsql/server/config"
+	"github.com/canonical/kvsql-dqlite/server"
+	"github.com/canonical/kvsql-dqlite/server/config"
 	"github.com/ghodss/yaml"
 	"github.com/stretchr/testify/require"
 	"go.etcd.io/etcd/clientv3"
