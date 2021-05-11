@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"time"
@@ -117,9 +118,20 @@ func New(dir string) (*Server, error) {
 	}
 
 	peers := localServerFile
+
+	crt := filepath.Join(dir, "cluster.crt")
+	key := filepath.Join(dir, "cluster.key")
+	kineTls := tls.Config{
+		CAFile: crt,
+		CertFile: crt,
+		KeyFile: key,
+	}
+
 	config := endpoint.Config{
 		Listener: fmt.Sprintf("unix://%s", socket),
+		//Listener: "tcp://127.0.0.1:12345",
 		Endpoint: fmt.Sprintf("dqlite://k8s?peer-file=%s&driver-name=%s", peers, app.Driver()),
+		Config: kineTls,
 	}
 	kineCtx, cancelKine := context.WithCancel(context.Background())
 	if _, err := endpoint.Listen(kineCtx, config); err != nil {
