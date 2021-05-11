@@ -13,8 +13,8 @@ import (
 	"github.com/canonical/go-dqlite/client"
 	"github.com/canonical/kvsql-dqlite/server/config"
 	"github.com/ghodss/yaml"
+	"github.com/k3s-io/kine/pkg/endpoint"
 	"github.com/pkg/errors"
-	"github.com/rancher/kine/pkg/endpoint"
 )
 
 // Server sets up a single dqlite node and serves the cluster management API.
