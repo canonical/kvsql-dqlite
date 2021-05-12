@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"time"
@@ -15,6 +14,7 @@ import (
 	"github.com/canonical/kvsql-dqlite/server/config"
 	"github.com/ghodss/yaml"
 	"github.com/k3s-io/kine/pkg/endpoint"
+	"github.com/k3s-io/kine/pkg/tls"
 	"github.com/pkg/errors"
 )
 
@@ -94,7 +94,7 @@ func New(dir string) (*Server, error) {
 		return nil, err
 	}
 
-	socket := filepath.Join(dir, "kine.sock")
+	//socket := filepath.Join(dir, "kine.sock")
 
 	// Connect to a single peer that is the current machine
 	info := client.NodeInfo{}
@@ -122,14 +122,13 @@ func New(dir string) (*Server, error) {
 	crt := filepath.Join(dir, "cluster.crt")
 	key := filepath.Join(dir, "cluster.key")
 	kineTls := tls.Config{
-		CAFile: crt,
 		CertFile: crt,
 		KeyFile: key,
 	}
 
 	config := endpoint.Config{
-		Listener: fmt.Sprintf("unix://%s", socket),
-		//Listener: "tcp://127.0.0.1:12345",
+		//Listener: fmt.Sprintf("unix://%s", socket),
+		Listener: "tcp://127.0.0.1:12345",
 		Endpoint: fmt.Sprintf("dqlite://k8s?peer-file=%s&driver-name=%s", peers, app.Driver()),
 		Config: kineTls,
 	}
