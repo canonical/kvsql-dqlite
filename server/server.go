@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"github.com/k3s-io/kine/pkg/drivers/generic"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -105,8 +106,6 @@ func New(dir string, listen string, enableTls bool) (*Server, error) {
 		return nil, err
 	}
 
-	//socket := filepath.Join(dir, "kine.sock")
-
 	// Connect to a single peer that is the current machine
 	info := client.NodeInfo{}
 	infoFile := filepath.Join(dir, "info.yaml")
@@ -135,9 +134,15 @@ func New(dir string, listen string, enableTls bool) (*Server, error) {
 		ep = listen
 	}
 
+	pool := generic.ConnectionPoolConfig{
+		MaxIdle:     5,
+		MaxOpen:     5,
+		MaxLifetime: 60 * time.Second,
+	}
 	config := endpoint.Config{
-		Listener: ep,
-		Endpoint: fmt.Sprintf("dqlite://k8s?peer-file=%s&driver-name=%s", peers, app.Driver()),
+		Listener:             ep,
+		Endpoint:             fmt.Sprintf("dqlite://k8s?peer-file=%s&driver-name=%s", peers, app.Driver()),
+		ConnectionPoolConfig: pool,
 	}
 
 	if enableTls {
