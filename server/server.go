@@ -26,8 +26,17 @@ type Server struct {
 	cancelKine context.CancelFunc
 }
 
-func New(dir string) (*Server, error) {
+var (
+	defaultKineEp = "tcp://127.0.0.1:12379"
+)
+
+func New(dir string, listen string, enableTls bool) (*Server, error) {
 	// Check if we're initializing a new node (i.e. there's an init.yaml).
+	// dir: the directory where data will be stored as well as where the init.yaml
+	//       and certificates should be found
+	// listen: kine listen endpoint could be a socket ("unix://<path>")
+	//         or network ep ("tcp://127.0.0.1:12345")
+	// enableTls: true if we should enable tls communication
 	cfg, err := config.Load(dir)
 	if err != nil {
 		return nil, err
@@ -68,8 +77,10 @@ func New(dir string) (*Server, error) {
 	}
 
 	options := []app.Option{
-		app.WithTLS(app.SimpleTLSConfig(cfg.KeyPair, cfg.Pool)),
 		app.WithFailureDomain(cfg.FailureDomain),
+	}
+	if enableTls {
+		options = append(options, app.WithTLS(app.SimpleTLSConfig(cfg.KeyPair, cfg.Pool)))
 	}
 
 	// Possibly initialize our ID, address and initial node store content.
@@ -119,19 +130,26 @@ func New(dir string) (*Server, error) {
 
 	peers := localServerFile
 
-	crt := filepath.Join(dir, "cluster.crt")
-	key := filepath.Join(dir, "cluster.key")
-	kineTls := tls.Config{
-		CertFile: crt,
-		KeyFile: key,
+	ep := defaultKineEp
+	if listen != "" {
+		ep = listen
 	}
 
 	config := endpoint.Config{
-		//Listener: fmt.Sprintf("unix://%s", socket),
-		Listener: "tcp://127.0.0.1:12345",
+		Listener: ep,
 		Endpoint: fmt.Sprintf("dqlite://k8s?peer-file=%s&driver-name=%s", peers, app.Driver()),
-		Config: kineTls,
 	}
+
+	if enableTls {
+		crt := filepath.Join(dir, "cluster.crt")
+		key := filepath.Join(dir, "cluster.key")
+		kineTls := tls.Config{
+			CertFile: crt,
+			KeyFile: key,
+		}
+		config.Config = kineTls
+	}
+
 	kineCtx, cancelKine := context.WithCancel(context.Background())
 	if _, err := endpoint.Listen(kineCtx, config); err != nil {
 		return nil, errors.Wrap(err, "kine")
