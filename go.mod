@@ -5,7 +5,7 @@ go 1.14
 require (
 	github.com/PuerkitoBio/goquery v1.5.1 // indirect
 	github.com/Rican7/retry v0.1.0 // indirect
-	github.com/canonical/go-dqlite v1.7.0
+	github.com/canonical/go-dqlite v1.8.0
 	github.com/coreos/etcd v3.3.22+incompatible // indirect
 	github.com/emicklei/go-restful v2.13.0+incompatible
 	github.com/ghodss/yaml v1.0.0
@@ -13,9 +13,8 @@ require (
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/json-iterator/go v1.1.10 // indirect
-	github.com/lib/pq v1.7.0 // indirect
-	github.com/pkg/errors v0.9.1
 	github.com/k3s-io/kine v0.6.0
+	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.6.0 // indirect
 	github.com/stretchr/testify v1.6.0
 	go.etcd.io/etcd v0.0.0-20191023171146-3cf2f69b5738
@@ -30,3 +29,5 @@ require (
 	k8s.io/apimachinery v0.17.0
 	k8s.io/apiserver v0.17.0
 )
+
+replace github.com/k3s-io/kine => github.com/canonical/kine v0.4.1-0.20210709095629-b4d4caa9eaed
