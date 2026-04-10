@@ -7,7 +7,7 @@ require (
 	github.com/Rican7/retry v0.1.0 // indirect
 	github.com/canonical/go-dqlite v1.7.0
 	github.com/coreos/etcd v3.3.22+incompatible // indirect
-	github.com/emicklei/go-restful v2.13.0+incompatible
+	github.com/emicklei/go-restful v2.16.0+incompatible
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/gogo/protobuf v1.3.1 // indirect
